@@ -1,7 +1,10 @@
 const axios = require('axios');
 
-// Discord webhook URL - replace with your actual webhook URL
-const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1409995005082210394/da8wSm0z09PbON8odUmMzXwjgnc9OdsnuhYXlvPxDO34Dtp4LJueYvz2Dry01xRNKpPt';
+// Load environment variables
+require('dotenv').config();
+
+// Discord webhook URL from environment variable
+const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
 
 // Inventory items organized by supplier
 const INVENTORY_ITEMS = {

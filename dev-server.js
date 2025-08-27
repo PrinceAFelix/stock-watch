@@ -1,6 +1,9 @@
 const express = require('express');
 const scanHandler = require('./api/scan');
 
+// Load environment variables
+require('dotenv').config();
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -52,7 +55,12 @@ app.post('/api/scan/bulk', async (req, res) => {
 
     // Send to Discord webhook
     const axios = require('axios');
-    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1409995005082210394/da8wSm0z09PbON8odUmMzXwjgnc9OdsnuhYXlvPxDO34Dtp4LJueYvz2Dry01xRNKpPt';
+    const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
+    
+    if (!DISCORD_WEBHOOK_URL) {
+      console.error('❌ DISCORD_WEBHOOK_URL environment variable is required!');
+      return res.status(500).json({ error: 'Discord webhook not configured' });
+    }
     
     await axios.post(DISCORD_WEBHOOK_URL, webhookPayload, {
       headers: {
