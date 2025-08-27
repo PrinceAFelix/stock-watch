@@ -56,7 +56,3 @@ Built with:
 - Tailwind CSS for styling
 - Responsive design for mobile/desktop
 
-## License
-
-ISC
-
