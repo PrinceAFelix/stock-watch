@@ -11,6 +11,15 @@ const App = () => {
   // Inventory data
   const suppliers: Supplier[] = [
     {
+      name: 'SHOP THINGS',
+      icon: '🏪',
+      items: [
+        { name: 'Production Record', supplier: 'SHOP THINGS' },
+        { name: 'Rubber Band', supplier: 'SHOP THINGS' },
+        { name: 'Scissors', supplier: 'SHOP THINGS' }
+      ]
+    },
+    {
       name: 'FARINEX',
       icon: '🏭',
       items: [
@@ -58,15 +67,6 @@ const App = () => {
         { name: 'Windex', supplier: 'COSTCO' },
         { name: 'Pinesol', supplier: 'COSTCO' },
         { name: 'Toilet Cleaner', supplier: 'COSTCO' }
-      ]
-    },
-    {
-      name: 'SHOP THINGS',
-      icon: '🏪',
-      items: [
-        { name: 'Production Record', supplier: 'SHOP THINGS' },
-        { name: 'Rubber Band', supplier: 'SHOP THINGS' },
-        { name: 'Scissors', supplier: 'SHOP THINGS' }
       ]
     }
   ];
@@ -267,60 +267,116 @@ const App = () => {
         </div>
 
         {/* Supplier Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {suppliers.map((supplier) => (
-            <div key={supplier.name} className="bg-white rounded-3xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2">
-              <div className="flex items-center mb-6 pb-4 border-b-2 border-gray-100">
-                <span className="text-4xl mr-4">{supplier.icon}</span>
-                <h3 className="text-2xl font-bold text-gray-800">{supplier.name}</h3>
-              </div>
-              <ul className="space-y-3">
-                {supplier.items.map((item) => (
-                  <li key={item.name} className="group">
-                    <div className={`flex items-center justify-between p-4 rounded-xl border-l-4 transition-all duration-300 hover:translate-x-2 ${
-                      isBulkMode && selectedItems.has(item.name)
-                        ? 'bg-blue-100 border-blue-500 hover:bg-blue-200'
-                        : 'bg-gray-50 border-blue-500 hover:bg-gray-100 hover:border-purple-600'
-                    }`}>
-                      <div className="flex items-center">
-                        {isBulkMode && (
-                          <input
-                            type="checkbox"
-                            checked={selectedItems.has(item.name)}
-                            onChange={() => toggleItemSelection(item.name)}
-                            disabled={isBulkScanning}
-                            className="mr-3 w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                          />
-                        )}
-                        <span className="text-xl mr-3">📦</span>
-                        <span className="text-gray-700 font-medium">{item.name}</span>
-                      </div>
-                      {!isBulkMode && (
-                        <button
-                          onClick={() => scanItem(item.name)}
-                          disabled={scanningItem === item.name}
-                          className={`px-4 py-2 rounded-full text-sm font-medium transition-all opacity-0 group-hover:opacity-100 ${
-                            scanningItem === item.name
-                              ? 'bg-gray-400 cursor-not-allowed'
-                              : 'bg-blue-500 hover:bg-blue-600 text-white hover:scale-105 hover:shadow-md'
-                          }`}
-                        >
-                          {scanningItem === item.name ? (
-                            <div className="flex items-center">
-                              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
-                              <span>Processing...</span>
-                            </div>
-                          ) : (
-                            'Scan'
-                          )}
-                        </button>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
+        <div className="space-y-8">
+          {/* First supplier (SHOP THINGS) - full width */}
+          <div className="bg-white rounded-3xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2">
+            <div className="flex items-center mb-6 pb-4 border-b-2 border-gray-100">
+              <span className="text-4xl mr-4">{suppliers[0].icon}</span>
+              <h3 className="text-2xl font-bold text-gray-800">{suppliers[0].name}</h3>
             </div>
-          ))}
+            <ul className="space-y-3">
+              {suppliers[0].items.map((item) => (
+                <li key={item.name} className="group">
+                  <div className={`flex items-center justify-between p-4 rounded-xl border-l-4 transition-all duration-300 hover:translate-x-2 ${
+                    isBulkMode && selectedItems.has(item.name)
+                      ? 'bg-blue-100 border-blue-500 hover:bg-blue-200'
+                      : 'bg-gray-50 border-blue-500 hover:bg-gray-100 hover:border-purple-600'
+                  }`}>
+                    <div className="flex items-center">
+                      {isBulkMode && (
+                        <input
+                          type="checkbox"
+                          checked={selectedItems.has(item.name)}
+                          onChange={() => toggleItemSelection(item.name)}
+                          disabled={isBulkScanning}
+                          className="mr-3 w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        />
+                      )}
+                      <span className="text-xl mr-3">📦</span>
+                      <span className="text-gray-700 font-medium">{item.name}</span>
+                    </div>
+                    {!isBulkMode && (
+                      <button
+                        onClick={() => scanItem(item.name)}
+                        disabled={scanningItem === item.name}
+                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all opacity-0 group-hover:opacity-100 ${
+                          scanningItem === item.name
+                            ? 'bg-gray-400 cursor-not-allowed'
+                            : 'bg-blue-500 hover:bg-blue-600 text-white hover:scale-105 hover:shadow-md'
+                        }`}
+                      >
+                        {scanningItem === item.name ? (
+                          <div className="flex items-center">
+                            <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+                            <span>Processing...</span>
+                          </div>
+                        ) : (
+                          'Scan'
+                        )}
+                      </button>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Other suppliers in a 3-column grid below */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {suppliers.slice(1).map((supplier) => (
+              <div key={supplier.name} className="bg-white rounded-3xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2">
+                <div className="flex items-center mb-6 pb-4 border-b-2 border-gray-100">
+                  <span className="text-4xl mr-4">{supplier.icon}</span>
+                  <h3 className="text-2xl font-bold text-gray-800">{supplier.name}</h3>
+                </div>
+                <ul className="space-y-3">
+                  {supplier.items.map((item) => (
+                    <li key={item.name} className="group">
+                      <div className={`flex items-center justify-between p-4 rounded-xl border-l-4 transition-all duration-300 hover:translate-x-2 ${
+                        isBulkMode && selectedItems.has(item.name)
+                          ? 'bg-blue-100 border-blue-500 hover:bg-blue-200'
+                          : 'bg-gray-50 border-blue-500 hover:bg-gray-100 hover:border-purple-600'
+                      }`}>
+                        <div className="flex items-center">
+                          {isBulkMode && (
+                            <input
+                              type="checkbox"
+                              checked={selectedItems.has(item.name)}
+                              onChange={() => toggleItemSelection(item.name)}
+                              disabled={isBulkScanning}
+                              className="mr-3 w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            />
+                          )}
+                          <span className="text-xl mr-3">📦</span>
+                          <span className="text-gray-700 font-medium">{item.name}</span>
+                        </div>
+                        {!isBulkMode && (
+                          <button
+                            onClick={() => scanItem(item.name)}
+                            disabled={scanningItem === item.name}
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all opacity-0 group-hover:opacity-100 ${
+                              scanningItem === item.name
+                                ? 'bg-gray-400 cursor-not-allowed'
+                                : 'bg-blue-500 hover:bg-blue-600 text-white hover:scale-105 hover:shadow-md'
+                            }`}
+                          >
+                            {scanningItem === item.name ? (
+                              <div className="flex items-center">
+                                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+                                <span>Processing...</span>
+                              </div>
+                            ) : (
+                              'Scan'
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
