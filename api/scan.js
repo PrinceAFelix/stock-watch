@@ -181,7 +181,7 @@ async function handleSingleScan(req, res) {
   res.end();
 }
 
-// Handle bulk item scan
+// Handle bulk scan
 async function handleBulkScan(req, res) {
   const { items, itemsBySupplier, totalCount, timestamp } = req.body;
   
@@ -217,7 +217,7 @@ async function handleBulkScan(req, res) {
     console.error('❌ Cannot send Discord webhook: DISCORD_WEBHOOK_URL not configured');
     return res.status(500).json({ error: 'Discord webhook not configured' });
   }
-  
+
   try {
     await axios.post(DISCORD_WEBHOOK_URL, webhookPayload, {
       headers: {
