@@ -51,6 +51,11 @@ const INVENTORY_ITEMS = {
     'Windex',
     'Pinesol',
     'Toilet Cleaner'
+  ],
+  'SHOP THINGS': [
+    'Production Record',
+    'Rubber Band',
+    'Scissors'
   ]
 };
 

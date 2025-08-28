@@ -59,6 +59,15 @@ const App = () => {
         { name: 'Pinesol', supplier: 'COSTCO' },
         { name: 'Toilet Cleaner', supplier: 'COSTCO' }
       ]
+    },
+    {
+      name: 'SHOP THINGS',
+      icon: '🏪',
+      items: [
+        { name: 'Production Record', supplier: 'SHOP THINGS' },
+        { name: 'Rubber Band', supplier: 'SHOP THINGS' },
+        { name: 'Scissors', supplier: 'SHOP THINGS' }
+      ]
     }
   ];
 
