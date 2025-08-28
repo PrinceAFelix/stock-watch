@@ -31,8 +31,9 @@ app.post('/api/scan/bulk', async (req, res) => {
     }
 
     // Create a single Discord message for all items
+    const DISCORD_USER_ID = process.env.DISCORD_USER_ID || '639874774373236736';
     const webhookPayload = {
-      content: `@here 🚨 **BULK LOW STOCK ALERT** - ${totalCount} items need restocking!`,
+      content: `<@${DISCORD_USER_ID}> 🚨 **BULK LOW STOCK ALERT** - ${totalCount} items need restocking!`,
       username: 'Inventory Scanner Bot',
       avatar_url: 'https://cdn.discordapp.com/emojis/1234567890.png',
       embeds: [

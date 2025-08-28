@@ -6,6 +6,12 @@ require('dotenv').config();
 // Discord webhook URL from environment variable
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
 
+// Frontend redirect configuration
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+
+// Discord mention configuration
+const DISCORD_USER_ID = process.env.DISCORD_USER_ID;
+
 // Inventory items organized by supplier
 const INVENTORY_ITEMS = {
   'FARINEX': [
@@ -99,7 +105,7 @@ module.exports = async (req, res) => {
 
     // Prepare Discord webhook payload
     const webhookPayload = {
-      content: `@here ${message}`,
+      content: `<@${DISCORD_USER_ID}> ${message}`,
       username: 'Inventory Scanner Bot',
       avatar_url: 'https://cdn.discordapp.com/emojis/1234567890.png', // Optional: replace with your bot avatar
       embeds: [
@@ -150,198 +156,10 @@ module.exports = async (req, res) => {
       // Continue execution even if Discord webhook fails
     }
 
-    // Return HTML confirmation page
-    const htmlResponse = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Low Stock Alert Sent</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .container {
-            background: white;
-            padding: 3rem;
-            border-radius: 25px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-            text-align: center;
-            max-width: 450px;
-            margin: 2rem;
-            animation: slideIn 0.5s ease-out;
-        }
-        @keyframes slideIn {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .alert-icon {
-            font-size: 5rem;
-            margin-bottom: 1.5rem;
-            animation: pulse 2s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        h1 {
-            color: #d63031;
-            margin-bottom: 1rem;
-            font-size: 2rem;
-            font-weight: 800;
-        }
-        p {
-            color: #666;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-        }
-        .item-info {
-            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin: 1.5rem 0;
-            border-left: 5px solid #ff6b6b;
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.1);
-        }
-        .item-name {
-            font-weight: bold;
-            color: #d63031;
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-        }
-        .supplier {
-            color: #666;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-        .status {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            color: #155724;
-            padding: 1rem;
-            border-radius: 15px;
-            margin: 1.5rem 0;
-            border: 1px solid #c3e6cb;
-            font-size: 1rem;
-            font-weight: 600;
-            box-shadow: 0 5px 15px rgba(212, 237, 218, 0.3);
-        }
-        .redirect-info {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-            color: #856404;
-            padding: 1.2rem;
-            border-radius: 15px;
-            margin: 1.5rem 0;
-            border: 1px solid #ffeaa7;
-            font-size: 0.95rem;
-            font-weight: 500;
-            box-shadow: 0 5px 15px rgba(255, 243, 205, 0.3);
-        }
-        .countdown {
-            font-weight: bold;
-            color: #d63031;
-            font-size: 1.1rem;
-        }
-        .loading-spinner {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #ff6b6b;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 0.8rem;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #f0f0f0;
-            border-radius: 3px;
-            margin-top: 1rem;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff6b6b, #ee5a24);
-            border-radius: 3px;
-            animation: progress 2s linear forwards;
-        }
-        @keyframes progress {
-            from { width: 100%; }
-            to { width: 0%; }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="alert-icon">🚨</div>
-        <h1>Alert Sent!</h1>
-        <p>Low stock notification has been sent to management via Discord.</p>
-        
-        <div class="item-info">
-            <div class="item-name">${itemName}</div>
-            <div class="supplier">Supplier: ${supplier}</div>
-        </div>
-        
-        <div class="status">
-            ✅ Discord notification sent successfully
-        </div>
-        
-        <div class="redirect-info">
-            <span class="loading-spinner"></span>
-            Returning to main page in <span id="countdown" class="countdown">2</span> seconds...
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // 2-second countdown with progress bar
-        let timeLeft = 2;
-        const countdownElement = document.getElementById('countdown');
-        
-        const countdown = setInterval(() => {
-            timeLeft--;
-            countdownElement.textContent = timeLeft;
-            
-            if (timeLeft <= 0) {
-                clearInterval(countdown);
-                // Redirect back to the React frontend
-                window.location.href = 'http://10.0.0.207:3000/';
-            }
-        }, 1000);
-        
-        // Also redirect immediately if user tries to interact
-        document.addEventListener('click', () => {
-          clearInterval(countdown);
-          window.location.href = 'http://10.0.0.207:3000/';
-        });
-        
-        // Redirect on any key press
-        document.addEventListener('keydown', () => {
-          clearInterval(countdown);
-          window.location.href = 'http://10.0.0.207:3000/';
-        });
-    </script>
-</body>
-</html>`;
-
-    res.setHeader('Content-Type', 'text/html');
-    res.status(200).send(htmlResponse);
+    // Redirect back to frontend with proper URL handling
+    const redirectUrl = FRONTEND_URL.endsWith('/') ? FRONTEND_URL.slice(0, -1) : FRONTEND_URL;
+    res.writeHead(302, { Location: redirectUrl + '/' });
+    res.end();
 
   } catch (error) {
     console.error('Error processing scan:', error);
