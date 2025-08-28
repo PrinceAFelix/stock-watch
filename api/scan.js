@@ -225,15 +225,13 @@ async function handleBulkScan(req, res) {
       }
     });
     console.log(`Successfully sent bulk low stock alert to Discord for ${totalCount} items`);
-    
-    res.json({ 
-      success: true, 
-      message: `Bulk alert sent for ${totalCount} items`,
-      itemsCount: totalCount
-    });
   } catch (webhookError) {
     console.error('Error sending to Discord webhook:', webhookError.message);
-    res.status(500).json({ error: 'Failed to send Discord webhook' });
   }
+
+  // Redirect back to frontend (same as single scan)
+  const redirectUrl = FRONTEND_URL.endsWith('/') ? FRONTEND_URL.slice(0, -1) : FRONTEND_URL;
+  res.writeHead(302, { Location: redirectUrl + '/' });
+  res.end();
 }
 
