@@ -6,6 +6,7 @@ const App = () => {
   const [isBulkMode, setIsBulkMode] = useState(false);
   const [isBulkScanning, setIsBulkScanning] = useState(false);
   const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0, message: '' });
+  const [scanningItem, setScanningItem] = useState<string | null>(null);
 
   // Inventory data
   const suppliers: Supplier[] = [
@@ -63,6 +64,9 @@ const App = () => {
 
   const scanItem = async (itemName: string) => {
     console.log('Scanning item:', itemName);
+    
+    // Show processing indicator
+    setScanningItem(itemName);
     
     // Navigate to scan URL to trigger Discord webhook
     // The scan page will automatically redirect back to main page after 1 second
@@ -285,9 +289,21 @@ const App = () => {
                       {!isBulkMode && (
                         <button
                           onClick={() => scanItem(item.name)}
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium transition-all hover:scale-105 hover:shadow-md opacity-0 group-hover:opacity-100"
+                          disabled={scanningItem === item.name}
+                          className={`px-4 py-2 rounded-full text-sm font-medium transition-all opacity-0 group-hover:opacity-100 ${
+                            scanningItem === item.name
+                              ? 'bg-gray-400 cursor-not-allowed'
+                              : 'bg-blue-500 hover:bg-blue-600 text-white hover:scale-105 hover:shadow-md'
+                          }`}
                         >
-                          Scan
+                          {scanningItem === item.name ? (
+                            <div className="flex items-center">
+                              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+                              <span>Processing...</span>
+                            </div>
+                          ) : (
+                            'Scan'
+                          )}
                         </button>
                       )}
                     </div>
